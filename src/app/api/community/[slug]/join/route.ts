@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { requireAuth } from '@/lib/auth/middleware'
 
-// POST /api/community/[id]/join
-export const POST = requireAuth(async (req: NextRequest, auth, { params }: { params: { id: string } }) => {
+// POST /api/community/[slug]/join
+export const POST = requireAuth(async (req: NextRequest, auth, { params }: { params: { slug: string } }) => {
   try {
     const supabase = createClient()
 

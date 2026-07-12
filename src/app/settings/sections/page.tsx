@@ -1,1 +1,1 @@
-export { SectionAccessSettings as default } from './profile/page'
+export { SectionAccessSettings as default } from '../profile/page'

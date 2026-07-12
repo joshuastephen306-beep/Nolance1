@@ -22,7 +22,7 @@ export const POST = requireAuth(async (req: NextRequest, auth, { params }: { par
     const { data: community } = await supabase
       .from('communities')
       .select('id, member_count')
-      .eq('id', params.id)
+      .eq('id', params.slug)
       .single()
 
     if (!community) return NextResponse.json({ error: 'Community not found' }, { status: 404 })

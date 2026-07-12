@@ -1,1 +1,1 @@
-export { SecuritySettings as default } from './profile/page'
+export { SecuritySettings as default } from '../profile/page'

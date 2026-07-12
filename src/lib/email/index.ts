@@ -28,7 +28,6 @@ function baseTemplate(content: string, title: string): string {
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f9fb;padding:40px 0">
     <tr><td align="center">
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-        <!-- Header -->
         <tr>
           <td style="background:#0a1628;padding:28px 40px">
             <span style="font-size:22px;font-weight:600;color:#ffffff;letter-spacing:-0.5px">
@@ -36,13 +35,11 @@ function baseTemplate(content: string, title: string): string {
             </span>
           </td>
         </tr>
-        <!-- Content -->
         <tr>
           <td style="padding:40px">
             ${content}
           </td>
         </tr>
-        <!-- Footer -->
         <tr>
           <td style="background:#f8f9fb;padding:24px 40px;border-top:1px solid #e2e8f0">
             <p style="margin:0;font-size:12px;color:#8896a7;line-height:1.6">
@@ -100,16 +97,10 @@ function warnBox(text: string) {
   </div>`
 }
 
-// ── SEND HELPER ───────────────────────────────────────────────
 async function send(to: string, subject: string, html: string) {
   await transporter.sendMail({ from: FROM, to, subject, html })
 }
 
-// ============================================================
-// EMAIL FUNCTIONS
-// ============================================================
-
-// ── WELCOME ───────────────────────────────────────────────────
 export async function sendWelcomeEmail(to: string, username: string) {
   const html = baseTemplate(`
     ${h1(`Welcome to Nolance, ${username}! 👑`)}
@@ -117,11 +108,10 @@ export async function sendWelcomeEmail(to: string, username: string) {
     ${infoBox('Your account is ready. Start by exploring gigs, posting a job on Scout, or browsing the Marketplace.')}
     ${btn('Get Started', `${APP_URL}`)}
     ${p('If you have any questions, our support team is always here to help.')}
-  `, 'Welcome to Nolance')}
+  `, 'Welcome to Nolance')
   await send(to, `Welcome to ${APP_NAME}, ${username}!`, html)
 }
 
-// ── EMAIL VERIFICATION ────────────────────────────────────────
 export async function sendEmailVerification(to: string, username: string, code: string, token: string) {
   const html = baseTemplate(`
     ${h1('Verify your email address')}
@@ -129,22 +119,20 @@ export async function sendEmailVerification(to: string, username: string, code: 
     ${codeBox(code)}
     ${btn('Verify Email Address', `${APP_URL}/auth/verify-email?token=${token}`)}
     ${p('If you did not create a Nolance account, you can safely ignore this email.')}
-  `, 'Verify Your Email')}
+  `, 'Verify Your Email')
   await send(to, 'Verify your Nolance email address', html)
 }
 
-// ── PASSWORD RESET ────────────────────────────────────────────
 export async function sendPasswordReset(to: string, username: string, token: string) {
   const html = baseTemplate(`
     ${h1('Reset your password')}
     ${p(`Hi ${username}, we received a request to reset your Nolance password. Click the button below to create a new password.`)}
     ${btn('Reset Password', `${APP_URL}/auth/reset-password?token=${token}`)}
     ${warnBox('This link expires in 1 hour. If you did not request a password reset, please contact our support team immediately.')}
-  `, 'Reset Your Password')}
+  `, 'Reset Your Password')
   await send(to, 'Reset your Nolance password', html)
 }
 
-// ── PHONE NUMBER ADDED ────────────────────────────────────────
 export async function sendPhoneAddedEmail(to: string, username: string, phone: string) {
   const html = baseTemplate(`
     ${h1('Phone number added to your account')}
@@ -152,11 +140,10 @@ export async function sendPhoneAddedEmail(to: string, username: string, phone: s
     ${infoBox(`Phone number added: <strong>${phone}</strong>`)}
     ${warnBox('If you did not add this phone number, please change your password immediately and contact our support team.')}
     ${btn('Secure My Account', `${APP_URL}/settings/security`)}
-  `, 'Phone Number Added')}
+  `, 'Phone Number Added')
   await send(to, 'Phone number added to your Nolance account', html)
 }
 
-// ── NEW LOGIN ─────────────────────────────────────────────────
 export async function sendNewLoginEmail(to: string, username: string, device: string, location: string) {
   const html = baseTemplate(`
     ${h1('New login detected')}
@@ -164,11 +151,10 @@ export async function sendNewLoginEmail(to: string, username: string, device: st
     ${infoBox(`Device: <strong>${device}</strong><br/>Location: <strong>${location}</strong><br/>Time: <strong>${new Date().toUTCString()}</strong>`)}
     ${warnBox('If this was not you, secure your account immediately by changing your password.')}
     ${btn('Secure My Account', `${APP_URL}/settings/security`)}
-  `, 'New Login Detected')}
+  `, 'New Login Detected')
   await send(to, 'New login to your Nolance account', html)
 }
 
-// ── NEW ORDER (SELLER) ────────────────────────────────────────
 export async function sendNewOrderEmail(to: string, sellerName: string, orderNumber: string, gigTitle: string, buyerName: string, amount: number, deadline: string) {
   const html = baseTemplate(`
     ${h1('You have a new order! 🎉')}
@@ -182,11 +168,10 @@ export async function sendNewOrderEmail(to: string, sellerName: string, orderNum
     `)}
     ${btn('View Order', `${APP_URL}/orders/${orderNumber}`)}
     ${p('Please start working on this order and deliver before the deadline. On-time delivery helps your ranking!')}
-  `, 'New Order Received')}
+  `, 'New Order Received')
   await send(to, `New order received — ${orderNumber}`, html)
 }
 
-// ── ORDER DELIVERED (BUYER) ───────────────────────────────────
 export async function sendOrderDeliveredEmail(to: string, buyerName: string, orderNumber: string, gigTitle: string) {
   const html = baseTemplate(`
     ${h1('Your order has been delivered!')}
@@ -194,11 +179,10 @@ export async function sendOrderDeliveredEmail(to: string, buyerName: string, ord
     ${infoBox(`Order: <strong>${orderNumber}</strong><br/>Gig: <strong>${gigTitle}</strong>`)}
     ${btn('Review Delivery', `${APP_URL}/orders/${orderNumber}`)}
     ${p('You have 3 days to review and request revisions if needed. After 3 days, the order will be automatically marked as complete.')}
-  `, 'Order Delivered')}
+  `, 'Order Delivered')
   await send(to, `Your order has been delivered — ${orderNumber}`, html)
 }
 
-// ── ORDER COMPLETED ───────────────────────────────────────────
 export async function sendOrderCompletedEmail(to: string, sellerName: string, orderNumber: string, earnings: number, clearanceDate: string) {
   const html = baseTemplate(`
     ${h1('Order completed — funds incoming! 💰')}
@@ -210,11 +194,10 @@ export async function sendOrderCompletedEmail(to: string, sellerName: string, or
     `)}
     ${btn('View Earnings', `${APP_URL}/dashboard/earnings`)}
     ${p('Don\'t forget to leave a review for your buyer — great relationships lead to repeat orders!')}
-  `, 'Order Completed')}
+  `, 'Order Completed')
   await send(to, `Order completed — $${earnings} incoming`, html)
 }
 
-// ── FUNDS CLEARED ─────────────────────────────────────────────
 export async function sendFundsClearedEmail(to: string, username: string, amount: number) {
   const html = baseTemplate(`
     ${h1('Your funds are ready to withdraw! ✅')}
@@ -222,11 +205,10 @@ export async function sendFundsClearedEmail(to: string, username: string, amount
     ${infoBox(`Available balance: <strong>$${amount}</strong> is ready to withdraw`)}
     ${btn('Withdraw Now', `${APP_URL}/dashboard/earnings`)}
     ${p('You can withdraw to any Nigerian bank, PayPal, Grey, Wise, Payoneer, or any international bank.')}
-  `, 'Funds Ready to Withdraw')}
+  `, 'Funds Ready to Withdraw')
   await send(to, `$${amount} is ready to withdraw`, html)
 }
 
-// ── WITHDRAWAL SUCCESS ────────────────────────────────────────
 export async function sendWithdrawalSuccessEmail(to: string, username: string, amount: number, method: string) {
   const html = baseTemplate(`
     ${h1('Withdrawal successful!')}
@@ -238,11 +220,10 @@ export async function sendWithdrawalSuccessEmail(to: string, username: string, a
     `)}
     ${p('Funds should arrive within the expected timeframe for your chosen withdrawal method. Contact support if you have not received your funds.')}
     ${btn('View Transaction History', `${APP_URL}/dashboard/earnings`)}
-  `, 'Withdrawal Successful')}
+  `, 'Withdrawal Successful')
   await send(to, `Withdrawal of $${amount} processed`, html)
 }
 
-// ── WITHDRAWAL FLAGGED ────────────────────────────────────────
 export async function sendWithdrawalFlaggedEmail(to: string, username: string, amount: number, reason: string) {
   const html = baseTemplate(`
     ${h1('Withdrawal under review')}
@@ -250,11 +231,10 @@ export async function sendWithdrawalFlaggedEmail(to: string, username: string, a
     ${warnBox(`Reason: ${reason}`)}
     ${p('Our team will review your withdrawal within 2 business days. You can appeal this decision through the Resolution Center.')}
     ${btn('Appeal This Decision', `${APP_URL}/resolution/appeal`)}
-  `, 'Withdrawal Under Review')}
+  `, 'Withdrawal Under Review')
   await send(to, `Your withdrawal of $${amount} is under review`, html)
 }
 
-// ── NEW MESSAGE ───────────────────────────────────────────────
 export async function sendNewMessageEmail(to: string, username: string, senderName: string, preview: string, conversationId: string) {
   const html = baseTemplate(`
     ${h1('You have a new message')}
@@ -262,11 +242,10 @@ export async function sendNewMessageEmail(to: string, username: string, senderNa
     ${infoBox(`"${preview.substring(0, 120)}${preview.length > 120 ? '...' : ''}"`)}
     ${btn('Reply Now', `${APP_URL}/dashboard/messages`)}
     ${p('Responding quickly improves your response rate and seller ranking.')}
-  `, 'New Message')}
+  `, 'New Message')
   await send(to, `New message from ${senderName}`, html)
 }
 
-// ── NEW REVIEW ────────────────────────────────────────────────
 export async function sendNewReviewEmail(to: string, username: string, rating: number, reviewerName: string, comment: string, gigTitle: string) {
   const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating)
   const html = baseTemplate(`
@@ -279,11 +258,10 @@ export async function sendNewReviewEmail(to: string, username: string, rating: n
     `)}
     ${btn('View Review', `${APP_URL}/dashboard/gigs`)}
     ${p('You can publicly respond to this review from your seller dashboard.')}
-  `, 'New Review Received')}
+  `, 'New Review Received')
   await send(to, `New ${rating}-star review from ${reviewerName}`, html)
 }
 
-// ── GIG APPROVED ─────────────────────────────────────────────
 export async function sendGigApprovedEmail(to: string, username: string, gigTitle: string, gigSlug: string) {
   const html = baseTemplate(`
     ${h1('Your gig is live! 🚀')}
@@ -291,11 +269,10 @@ export async function sendGigApprovedEmail(to: string, username: string, gigTitl
     ${infoBox(`Gig: <strong>${gigTitle}</strong>`)}
     ${btn('View Your Gig', `${APP_URL}/gig/${gigSlug}`)}
     ${p('Share your gig link on social media and in NOLANCE Communities to get your first orders!')}
-  `, 'Gig Approved')}
+  `, 'Gig Approved')
   await send(to, `Your gig is now live — "${gigTitle}"`, html)
 }
 
-// ── GIG DENIED ────────────────────────────────────────────────
 export async function sendGigDeniedEmail(to: string, username: string, gigTitle: string, reason: string) {
   const html = baseTemplate(`
     ${h1('Your gig needs some changes')}
@@ -304,11 +281,10 @@ export async function sendGigDeniedEmail(to: string, username: string, gigTitle:
     ${infoBox(`Gig: <strong>${gigTitle}</strong>`)}
     ${btn('Edit Your Gig', `${APP_URL}/dashboard/gigs`)}
     ${p('Once you have made the changes, resubmit your gig for review. Our team will review it within 24 hours.')}
-  `, 'Gig Needs Changes')}
+  `, 'Gig Needs Changes')
   await send(to, `Your gig needs changes — "${gigTitle}"`, html)
 }
 
-// ── ACCOUNT WARNING ───────────────────────────────────────────
 export async function sendAccountWarningEmail(to: string, username: string, violation: string, strike: number) {
   const html = baseTemplate(`
     ${h1('Important notice about your account')}
@@ -317,11 +293,10 @@ export async function sendAccountWarningEmail(to: string, username: string, viol
     ${p('Please review the NOLANCE Community Guidelines and ensure your activity complies with our policies. Continued violations may result in account suspension.')}
     ${btn('View Guidelines', `${APP_URL}/legal/community-guidelines`)}
     ${btn('Appeal This Decision', `${APP_URL}/resolution/appeal`)}
-  `, 'Account Notice')}
+  `, 'Account Notice')
   await send(to, 'Important notice about your Nolance account', html)
 }
 
-// ── ACCOUNT SUSPENDED ─────────────────────────────────────────
 export async function sendAccountSuspendedEmail(to: string, username: string, reason: string, fundsReleaseDate: string) {
   const html = baseTemplate(`
     ${h1('Your account has been suspended')}
@@ -330,11 +305,10 @@ export async function sendAccountSuspendedEmail(to: string, username: string, re
     ${infoBox(`Any funds in your account will be held for 30 days and released on: <strong>${fundsReleaseDate}</strong>`)}
     ${p('You can appeal this decision through our Resolution Center. Our team will review all appeals within 5 business days.')}
     ${btn('Appeal Suspension', `${APP_URL}/resolution/appeal`)}
-  `, 'Account Suspended')}
+  `, 'Account Suspended')
   await send(to, 'Your Nolance account has been suspended', html)
 }
 
-// ── FUND HOLD ─────────────────────────────────────────────────
 export async function sendFundHoldEmail(to: string, username: string, amount: number, holdDays: number, releaseDate: string, reason: string) {
   const html = baseTemplate(`
     ${h1('Funds placed on hold')}
@@ -347,11 +321,10 @@ export async function sendFundHoldEmail(to: string, username: string, amount: nu
     `)}
     ${p('If you believe this hold was placed in error, please appeal through the Resolution Center.')}
     ${btn('Appeal Hold', `${APP_URL}/resolution/appeal`)}
-  `, 'Funds On Hold')}
+  `, 'Funds On Hold')
   await send(to, `$${amount} placed on hold — action required`, html)
 }
 
-// ── SCOUT PROPOSAL RECEIVED ───────────────────────────────────
 export async function sendProposalReceivedEmail(to: string, buyerName: string, jobTitle: string, sellerName: string, jobId: string) {
   const html = baseTemplate(`
     ${h1('New proposal on your job')}
@@ -359,11 +332,10 @@ export async function sendProposalReceivedEmail(to: string, buyerName: string, j
     ${infoBox(`Job: <strong>${jobTitle}</strong>`)}
     ${btn('Review Proposal', `${APP_URL}/scout/job/${jobId}`)}
     ${p('Review all proposals and message the seller you like most directly from the proposal page.')}
-  `, 'New Proposal Received')}
+  `, 'New Proposal Received')
   await send(to, `New proposal on "${jobTitle}"`, html)
 }
 
-// ── MANAGED SERVICES UPDATE ───────────────────────────────────
 export async function sendManagedServicesUpdateEmail(to: string, username: string, requestTitle: string, status: string, requestId: string) {
   const html = baseTemplate(`
     ${h1('Update on your Managed Services request')}
@@ -373,6 +345,6 @@ export async function sendManagedServicesUpdateEmail(to: string, username: strin
       Status: <strong>${status}</strong>
     `)}
     ${btn('View Request', `${APP_URL}/managed/orders/${requestId}`)}
-  `, 'Managed Services Update')}
+  `, 'Managed Services Update')
   await send(to, `Managed Services update — "${requestTitle}"`, html)
 }

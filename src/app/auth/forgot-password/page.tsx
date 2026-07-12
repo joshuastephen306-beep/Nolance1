@@ -15,7 +15,7 @@ import axios from 'axios'
 const forgotSchema = z.object({ email: z.string().email('Enter a valid email address') })
 type ForgotData = z.infer<typeof forgotSchema>
 
-export function ForgotPasswordForm() {
+function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<ForgotData>({ resolver: zodResolver(forgotSchema) })
@@ -73,7 +73,7 @@ const resetSchema = z.object({
 }).refine(d => d.password === d.confirm, { message: 'Passwords do not match', path: ['confirm'] })
 type ResetData = z.infer<typeof resetSchema>
 
-export function ResetPasswordForm() {
+function ResetPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get('token') || ''

@@ -1,1 +1,1 @@
-export { NotificationSettings as default } from './profile/page'
+export { NotificationSettings as default } from '../profile/page'

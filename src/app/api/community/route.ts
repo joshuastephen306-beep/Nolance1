@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/community/join — join a community
-export async function joinCommunity(req: NextRequest, auth: any, community_id: string) {
+async function joinCommunity(req: NextRequest, auth: any, community_id: string) {
   const supabase = createClient()
 
   // Check community access
